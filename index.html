@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>キャリア支援Webソフト</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        .setup-container { max-width: 600px; margin: 100px auto; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .character-msg { background: #e9ecef; border-radius: 15px; padding: 15px; margin-bottom: 20px; position: relative; }
+        .btn-primary { background-color: #007bff; border: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="setup-container text-center">
+        <div class="character-msg">
+            「まずはニックネームをカタカナ5文字以内で教えて下さい」
+        </div>
+        
+        <div class="mb-3">
+            <input type="text" id="nickname" class="form-control form-control-lg text-center" placeholder="例：シゲル" maxlength="5">
+        </div>
+        
+        <button id="startBtn" class="btn btn-primary btn-lg w-100">次へ進む</button>
+    </div>
+</div>
+
+<script>
+    // ニックネームを保存して次の画面へ（仮の動き）
+    document.getElementById('startBtn').addEventListener('click', function() {
+        const name = document.getElementById('nickname').value;
+        if (name) {
+            [cite_start]localStorage.setItem('userName', name); // ニックネームを記憶 [cite: 10]
+            alert(name + 'さん、これからよろしくお願いします！');
+            // ここでS1画面へ遷移するロジックを後で追加します
+        } else {
+            alert('ニックネームを入力してくださいね。');
+        }
+    });
+</script>
+
+</body>
+</html>
