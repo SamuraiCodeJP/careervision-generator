@@ -8,10 +8,13 @@
     <style>
         body { background-color: #f0f2f5; font-family: sans-serif; }
         .app-container { max-width: 650px; margin: 30px auto; padding: 25px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .character-bubble { background: #fff0f5; border: 2px solid #ffb6c1; border-radius: 15px; padding: 15px; margin-bottom: 25px; position: relative; }
+        .character-bubble { background: #fff0f5; border: 2px solid #ffb6c1; border-radius: 15px; padding: 15px; margin-bottom: 25px; position: relative; color: #444; }
+        .character-bubble::after { content: ''; position: absolute; bottom: -10px; left: 30px; border-width: 10px 10px 0; border-style: solid; border-color: #ffb6c1 transparent; }
         .hidden { display: none !important; }
-        .form-label { font-weight: bold; color: #444; font-size: 0.9rem; margin-top: 10px; }
+        .form-label { font-weight: bold; color: #444; font-size: 0.9rem; margin-top: 15px; }
         .btn-option { padding: 12px; border-radius: 12px; font-weight: bold; transition: 0.3s; }
+        /* 入力枠のスタイル改善 */
+        .auto-resize { overflow: hidden; resize: none; min-height: 45px; transition: height 0.2s; }
         .result-box { background: #f8f9fa; border: 1px solid #ddd; padding: 20px; border-radius: 10px; white-space: pre-wrap; line-height: 1.8; }
     </style>
 </head>
@@ -21,7 +24,7 @@
     <div class="app-container">
         <div class="character-bubble" id="main-msg"></div>
 
-        <div id="step-s1" class="hidden">
+        <div id="step-s1" class="hidden text-center">
             <div class="d-grid gap-3">
                 <button onclick="startPR()" class="btn btn-outline-primary p-4 btn-option">✨ 自己PRを作成する</button>
                 <button class="btn btn-outline-secondary p-4 btn-option" disabled>🚀 志望動機（準備中）</button>
@@ -29,54 +32,48 @@
         </div>
 
         <div id="pr-step1" class="hidden">
-            <div class="mb-3">
-                <label class="form-label">一番力を入れたこと</label>
-                <input type="text" class="form-control" id="q1" placeholder="サークル、アルバイト、学業など">
-                <label class="form-label">力を注ごうと思った理由</label>
-                <input type="text" class="form-control" id="q2" placeholder="将来のため、必要な費用を稼ぎたいなど">
-                <label class="form-label">はじめた当初の不安</label>
-                <input type="text" class="form-control" id="q3" placeholder="接客できるか不安など">
-                <label class="form-label">不安に対して努力したこと</label>
-                <input type="text" class="form-control" id="q4" placeholder="先輩の言動を真似したなど">
-            </div>
-            <button onclick="showPage('pr-step2')" class="btn btn-primary w-100 btn-option">次へ（2/3）</button>
+            <label class="form-label">一番力を入れたこと</label>
+            <textarea class="form-control auto-resize" id="q1" rows="1" placeholder="サークル、アルバイト、学業など"></textarea>
+            <label class="form-label">力を注ごうと思った理由</label>
+            <textarea class="form-control auto-resize" id="q2" rows="1" placeholder="将来のため、必要な費用を稼ぎたいなど"></textarea>
+            <label class="form-label">はじめた当初の不安</label>
+            <textarea class="form-control auto-resize" id="q3" rows="1" placeholder="接客できるか不安など"></textarea>
+            <label class="form-label">不安に対して努力したこと</label>
+            <textarea class="form-control auto-resize" id="q4" rows="1" placeholder="先輩の言動を真似したなど"></textarea>
+            <button onclick="showPage('pr-step2', getCharMsg(2))" class="btn btn-primary w-100 btn-option mt-4">次へ（2/3）</button>
         </div>
 
         <div id="pr-step2" class="hidden">
-            <div class="mb-3">
-                <label class="form-label">慣れてきてから設定した目標</label>
-                <input type="text" class="form-control" id="q5" placeholder="客を笑顔にする、運営に貢献など">
-                <label class="form-label">生じた問題（失敗・苦労・困難）</label>
-                <textarea class="form-control" id="q6" rows="2" placeholder="意見の衝突でサークルが分裂しかけたなど"></textarea>
-                <label class="form-label">問題の原因</label>
-                <input type="text" class="form-control" id="q7" placeholder="選考基準が曖昧だったなど">
-                <label class="form-label">問題に対するあなたの行動</label>
-                <textarea class="form-control" id="q8" rows="2" placeholder="調停しようと努力したなど"></textarea>
-                <label class="form-label">問題克服のため創意工夫</label>
-                <input type="text" class="form-control" id="q9" placeholder="独自の評価シートを作成したなど">
-            </div>
-            <div class="d-flex gap-2">
-                <button onclick="showPage('pr-step1')" class="btn btn-secondary w-50 btn-option">戻る</button>
-                <button onclick="showPage('pr-step3')" class="btn btn-primary w-50 btn-option">次へ（3/3）</button>
+            <label class="form-label">慣れてきてから設定した目標</label>
+            <textarea class="form-control auto-resize" id="q5" rows="1" placeholder="客を笑顔にする、運営に貢献など"></textarea>
+            <label class="form-label">生じた問題（失敗・苦労・困難）</label>
+            <textarea class="form-control auto-resize" id="q6" rows="1" placeholder="意見の衝突でサークルが分裂しかけたなど"></textarea>
+            <label class="form-label">問題の原因</label>
+            <textarea class="form-control auto-resize" id="q7" rows="1" placeholder="選考基準が曖昧だったなど"></textarea>
+            <label class="form-label">問題に対するあなたの行動</label>
+            <textarea class="form-control auto-resize" id="q8" rows="1" placeholder="調停しようと努力したなど"></textarea>
+            <label class="form-label">問題克服のため創意工夫</label>
+            <textarea class="form-control auto-resize" id="q9" rows="1" placeholder="独自の評価シートを作成したなど"></textarea>
+            <div class="d-flex gap-2 mt-4">
+                <button onclick="showPage('pr-step1', getCharMsg(1))" class="btn btn-secondary w-50 btn-option">戻る</button>
+                <button onclick="showPage('pr-step3', getCharMsg(3))" class="btn btn-primary w-50 btn-option">次へ（3/3）</button>
             </div>
         </div>
 
         <div id="pr-step3" class="hidden">
-            <div class="mb-3">
-                <label class="form-label">問題を振り返って得た学び</label>
-                <input type="text" class="form-control" id="q10" placeholder="根回しや意見をきくことが重要など">
-                <label class="form-label">得た成長や自信</label>
-                <input type="text" class="form-control" id="q11" placeholder="世代の違う人と話せるようになったなど">
-                <label class="form-label">具体的な成果</label>
-                <input type="text" class="form-control" id="q12" placeholder="ベスト8入り、時給アップなど">
-                <label class="form-label">一番嬉しかった褒め言葉</label>
-                <input type="text" class="form-control" id="q13" placeholder="「いてくれて心強いよ」など">
-                <hr>
-                <label class="form-label text-primary">★課題のタイトル（必須）</label>
-                <input type="text" class="form-control border-primary" id="q-title" placeholder="例：最大の壁をどう乗り越えたか？">
-            </div>
-            <div class="d-flex gap-2">
-                <button onclick="showPage('pr-step2')" class="btn btn-secondary w-50 btn-option">戻る</button>
+            <label class="form-label">問題を振り返って得た学び</label>
+            <textarea class="form-control auto-resize" id="q10" rows="1" placeholder="根回しや意見をきくことが重要など"></textarea>
+            <label class="form-label">得た成長や自信</label>
+            <textarea class="form-control auto-resize" id="q11" rows="1" placeholder="世代の違う人と話せるようになったなど"></textarea>
+            <label class="form-label">具体的な成果</label>
+            <textarea class="form-control auto-resize" id="q12" rows="1" placeholder="ベスト8入り、時給アップなど"></textarea>
+            <label class="form-label">一番嬉しかった褒め言葉</label>
+            <textarea class="form-control auto-resize" id="q13" rows="1" placeholder="「いてくれて心強いよ」など"></textarea>
+            <hr>
+            <label class="form-label text-primary">★課題のタイトル（必須）</label>
+            <textarea class="form-control border-primary auto-resize" id="q-title" rows="1" placeholder="例：最大の壁をどう乗り越えたか？"></textarea>
+            <div class="d-flex gap-2 mt-4">
+                <button onclick="showPage('pr-step2', getCharMsg(2))" class="btn btn-secondary w-50 btn-option">戻る</button>
                 <button onclick="handleGenerate()" class="btn btn-success w-50 btn-option">✨ 生成する</button>
             </div>
         </div>
@@ -84,7 +81,7 @@
         <div id="step-result" class="hidden">
             <div class="result-box mb-3" id="result-text"></div>
             <div class="d-grid gap-2">
-                <button onclick="showPage('pr-step3')" class="btn btn-outline-primary btn-option">課題チェンジ（内容保持）</button>
+                <button onclick="showPage('pr-step3', getCharMsg(3))" class="btn btn-outline-primary btn-option">課題チェンジ（内容保持）</button>
                 <button onclick="location.reload()" class="btn btn-secondary btn-option">戻る（最初から）</button>
             </div>
         </div>
@@ -92,66 +89,83 @@
 </div>
 
 <script>
-    const ADMIN_KEY = "YOUR_API_KEY_HERE"; // ★ここに自分のAPIキーを入れる
+    const ADMIN_KEY = "AIzaSyCoKZ9S4UN5E1eaLMX3moCiL9WSYP5fjs4"; // ★ここに自分のAPIキーを貼る
     const LIMIT = 5;
 
-    function showPage(id, customMsg) {
+    // メッセージ生成関数
+    function getCharMsg(step) {
+        const name = localStorage.getItem('userName') || "あなた";
+        if(step === 1) return `「はい、${name}さんの自己PR生成をお手伝いしますね。まずは基本情報を教えてください」`;
+        if(step === 2) return `「次に、${name}さんがぶつかった壁や、それをどう乗り越えたかについて教えてください」`;
+        if(step === 3) return `「お疲れ様です、${name}さんの自己PR生成をお手伝いしますね。最後に、体験から得たことを教えて下さい」`;
+        return `「${name}さん、お手伝いできることはありますか？」`;
+    }
+
+    // 画面切り替え
+    function showPage(id, msg) {
         document.querySelectorAll('.app-container > div:not(.character-bubble)').forEach(el => el.classList.add('hidden'));
         document.getElementById(id).classList.remove('hidden');
-        if(customMsg) document.getElementById('main-msg').innerText = customMsg;
+        if(msg) document.getElementById('main-msg').innerText = msg;
+        window.scrollTo(0,0);
     }
 
-    function startPR() {
-        const name = localStorage.getItem('userName');
-        showPage('pr-step1', `「はい、${name}さんの自己PR生成をお手伝いしますね。まずは基本情報を教えてください」`);
-    }
+    function startPR() { showPage('pr-step1', getCharMsg(1)); }
 
+    // オートリサイズの設定
+    document.querySelectorAll('.auto-resize').forEach(el => {
+        el.addEventListener('input', () => {
+            el.style.height = 'auto';
+            el.style.height = el.scrollHeight + 'px';
+        });
+    });
+
+    // 生成ロジック
     async function handleGenerate() {
-        const title = document.getElementById('q-title').value;
+        const title = document.getElementById('q-title').value.trim();
         if(!title) return alert("タイトルを入力してください");
 
         const count = parseInt(localStorage.getItem('usageCount') || "0");
         let key = ADMIN_KEY;
-
         if (count >= LIMIT) {
-            key = prompt("お試し5回を超えました。ご自身のGemini APIキーを入力してください");
+            key = prompt("お試し回数を超えました。ご自身のAPIキーを入力してください");
             if(!key) return;
         }
 
         document.getElementById('main-msg').innerText = "「AIが一生懸命考えています。少しだけ待ってくださいね…」";
         
-        const promptText = `以下の情報を元に、就活用の自己PRを作成してください。
+        const pText = `以下の情報を元に、就活用の自己PRを作成してください。
         ルール：ですます調、結論先行、私を多用しない、苦労した心情を入力から類推して含める、他者の褒め言葉をエピソードに加える。400文字程度。
-        【課題】${title}
-        【内容】力を入れたこと：${document.getElementById('q1').value}、背景：${document.getElementById('q2').value}、
-        不安：${document.getElementById('q3').value}、努力：${document.getElementById('q4').value}、目標：${document.getElementById('q5').value}、
-        困難：${document.getElementById('q6').value}、原因：${document.getElementById('q7').value}、行動：${document.getElementById('q8').value}、
-        工夫：${document.getElementById('q9').value}、学び：${document.getElementById('q10').value}、成長：${document.getElementById('q11').value}、
-        成果：${document.getElementById('q12').value}、褒め言葉：${document.getElementById('q13').value}`;
+        課題：${title} / 内容：${document.getElementById('q1').value} / 背景：${document.getElementById('q2').value} / 不安：${document.getElementById('q3').value} / 努力：${document.getElementById('q4').value} / 目標：${document.getElementById('q5').value} / 困難：${document.getElementById('q6').value} / 原因：${document.getElementById('q7').value} / 行動：${document.getElementById('q8').value} / 工夫：${document.getElementById('q9').value} / 学び：${document.getElementById('q10').value} / 成長：${document.getElementById('q11').value} / 成果：${document.getElementById('q12').value} / 褒め言葉：${document.getElementById('q13').value}`;
 
         try {
             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
                 method: "POST",
-                body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contents: [{ parts: [{ text: pText }] }] })
             });
             const data = await res.json();
-            const result = data.candidates[0].content.parts[0].text;
             
+            // エラーチェック
+            if(data.error) throw new Error(data.error.message);
+            
+            const result = data.candidates[0].content.parts[0].text;
             localStorage.setItem('usageCount', count + 1);
             document.getElementById('result-text').innerText = result;
             showPage('step-result', `「${localStorage.getItem('userName')}さん、お疲れ様でした。納得のいく文章になりましたか？」`);
         } catch (e) {
-            document.getElementById('main-msg').innerText = "「ジェミニが疲れ果てました…。少し時間を置いてください」";
+            console.error(e);
+            document.getElementById('main-msg').innerText = "「ジェミニが疲れ果てました…。APIキーが正しいか、時間を置いて試してくださいね」";
         }
     }
 
     window.onload = () => {
         const name = localStorage.getItem('userName');
         if(name) {
-            showPage('step-s1', `「${name}さん、お手伝いできることはありますか？」`);
+            showPage('step-s1', getCharMsg(0));
         } else {
-            // ログイン画面（省略しているが本来はここでニックネーム取得）
-            location.href = "index.html"; 
+            // 名前がない場合は一旦リロード（最初の画面へ）
+            localStorage.clear();
+            location.reload();
         }
     };
 </script>
