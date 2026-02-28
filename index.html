@@ -6,40 +6,102 @@
     <title>キャリア支援Webソフト</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; font-family: 'Helvetica Neue', Arial, sans-serif; }
-        .setup-container { max-width: 600px; margin: 100px auto; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .character-msg { background: #e9ecef; border-radius: 15px; padding: 15px; margin-bottom: 20px; position: relative; }
-        .btn-primary { background-color: #007bff; border: none; }
+        body { background-color: #f0f2f5; font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; }
+        .app-container { max-width: 500px; margin: 50px auto; padding: 25px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .character-bubble { background: #fff0f5; border: 2px solid #ffb6c1; border-radius: 15px; padding: 15px; margin-bottom: 25px; position: relative; color: #444; line-height: 1.6; }
+        .character-bubble::after { content: ''; position: absolute; bottom: -10px; left: 30px; border-width: 10px 10px 0; border-style: solid; border-color: #ffb6c1 transparent; }
+        .hidden { display: none; }
+        .btn-option { padding: 15px; font-weight: bold; transition: 0.3s; border-radius: 12px; }
+        .btn-option:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="setup-container text-center">
-        <div class="character-msg">
-            「まずはニックネームをカタカナ5文字以内で教えて下さい」
-        </div>
+    <div class="app-container">
         
-        <div class="mb-3">
-            <input type="text" id="nickname" class="form-control form-control-lg text-center" placeholder="例：シゲル" maxlength="5">
+        <div id="step-login">
+            <div class="character-bubble">
+                「まずはニックネームをカタカナ5文字以内で教えて下さいね」
+            </div>
+            <div class="mb-4">
+                <input type="text" id="nickname" class="form-control form-control-lg text-center" placeholder="例：シゲル" maxlength="5">
+            </div>
+            <button onclick="saveNickname()" class="btn btn-primary btn-lg w-100 btn-option">次へ進む</button>
         </div>
-        
-        <button id="startBtn" class="btn btn-primary btn-lg w-100">次へ進む</button>
+
+        <div id="step-s1" class="hidden">
+            <div class="character-bubble" id="s1-msg">
+                </div>
+            
+            <div class="d-grid gap-3">
+                <div class="form-check card p-3 btn-option">
+                    <input class="form-check-input" type="radio" name="menuSelect" id="opt-pr" value="pr">
+                    <label class="form-check-label w-100" for="opt-pr">
+                        ✨ 自己PRを作成する
+                    </label>
+                </div>
+                <div class="form-check card p-3 btn-option">
+                    <input class="form-check-input" type="radio" name="menuSelect" id="opt-shibo" value="shibo">
+                    <label class="form-check-label w-100" for="opt-shibo">
+                        🚀 志望動機を作成する
+                    </label>
+                </div>
+                <button onclick="goToNextStep()" class="btn btn-success btn-lg mt-3 btn-option">決定して進む</button>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
-    // ニックネームを保存して次の画面へ（仮の動き）
-    document.getElementById('startBtn').addEventListener('click', function() {
+    // 画面の切り替え関数
+    function showStep(stepId) {
+        document.getElementById('step-login').classList.add('hidden');
+        document.getElementById('step-s1').classList.add('hidden');
+        document.getElementById(stepId).classList.remove('hidden');
+    }
+
+    // ニックネームの保存
+    function saveNickname() {
         const name = document.getElementById('nickname').value;
         if (name) {
-            [cite_start]localStorage.setItem('userName', name); // ニックネームを記憶 [cite: 10]
-            alert(name + 'さん、これからよろしくお願いします！');
-            // ここでS1画面へ遷移するロジックを後で追加します
+            localStorage.setItem('userName', name);
+            loadS1();
         } else {
             alert('ニックネームを入力してくださいね。');
         }
-    });
+    }
+
+    // S1画面の読み込み
+    function loadS1() {
+        const name = localStorage.getItem('userName');
+        const msg = `「${name}さん、お手伝いできることはありますか？まずは、自己PRか、志望動機のどちらをご希望ですか？ラジオボタンにタッチしてください」`;
+        document.getElementById('s1-msg').innerText = msg;
+        showStep('step-s1');
+    }
+
+    // 次のステップ（自己PR編 or 志望動機編）へ
+    function goToNextStep() {
+        const selected = document.querySelector('radio[name="menuSelect"]:checked');
+        if (!selected) {
+            alert('どちらか選んでくださいね。');
+            return;
+        }
+        
+        if (selected.value === 'pr') {
+            alert('次は自己PRの入力画面（第2章）を作ります！');
+        } else {
+            alert('次は志望動機・ビジョンの画面（第3章）を作ります！');
+        }
+    }
+
+    // ページ読み込み時に名前があればS1へ直行
+    window.onload = function() {
+        if (localStorage.getItem('userName')) {
+            loadS1();
+        }
+    };
 </script>
 
 </body>
