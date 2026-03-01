@@ -4,82 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>自己PR作成 (Z) - キャリア支援ツール</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { font-family: "Helvetica Neue", Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 2rem auto; padding: 0 1rem; color: #333; }
-        .header { border-bottom: 2px solid #007bff; margin-bottom: 2rem; padding-bottom: 1rem; }
-        .user-info { background: #f8f9fa; padding: 0.5rem 1rem; border-radius: 4px; margin-bottom: 1rem; font-weight: bold; }
-        .form-group { margin-bottom: 1.5rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-        input[type="text"], textarea { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        textarea { height: 100px; }
-        .button-group { display: flex; gap: 10px; margin-top: 2rem; }
-        button { padding: 0.7rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
-        .btn-primary { background: #007bff; color: white; }
-        .btn-secondary { background: #6c757d; color: white; text-decoration: none; display: inline-block; text-align: center; }
-        #resultArea { margin-top: 2rem; padding: 1rem; border: 1px dashed #007bff; background: #ebf5ff; display: none; }
+        body { background-color: #f0f2f5; font-family: sans-serif; }
+        .app-container { max-width: 650px; margin: 30px auto; padding: 25px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .character-bubble { background: #fff0f5; border: 2px solid #ffb6c1; border-radius: 15px; padding: 15px; margin-bottom: 25px; position: relative; color: #444; }
+        .character-bubble::after { content: ''; position: absolute; bottom: -10px; left: 30px; border-width: 10px 10px 0; border-style: solid; border-color: #ffb6c1 transparent; }
+        .hidden { display: none !important; }
+        .form-label { font-weight: bold; color: #444; font-size: 0.9rem; margin-top: 15px; }
+        .btn-option { padding: 12px; border-radius: 12px; font-weight: bold; transition: 0.3s; }
+        .auto-resize { overflow: hidden; resize: none; min-height: 45px; transition: height 0.2s; }
+        .result-box { background: #f8f9fa; border: 1px solid #ddd; padding: 20px; border-radius: 10px; white-space: pre-wrap; line-height: 1.8; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>自己PR作成 (Z)</h1>
-        <div class="user-info">
-            ユーザー: <span id="displayName">読み込み中...</span> さん
+<div class="container">
+    <div class="app-container">
+        <div class="character-bubble" id="main-msg"></div>
+
+        <div id="pr-step1">
+            <label class="form-label">一番力を入れたこと</label>
+            <textarea class="form-control auto-resize" id="q1" placeholder="サークル、アルバイト、留学など"></textarea>
+            <label class="form-label">力を注ごうと思った理由</label>
+            <textarea class="form-control auto-resize" id="q2" placeholder="社会勉強、将来のためなど"></textarea>
+            <label class="form-label">はじめた当初の不安</label>
+            <textarea class="form-control auto-resize" id="q3" placeholder="馴染めるか不安、接客できるか不安など"></textarea>
+            <label class="form-label">不安に対して努力したこと</label>
+            <textarea class="form-control auto-resize" id="q4" placeholder="自分から挨拶した、先輩を真似したなど"></textarea>
+            <button onclick="showPage('pr-step2', 2)" class="btn btn-primary w-100 btn-option mt-4">次へ（2/3）</button>
+        </div>
+
+        <div id="pr-step2" class="hidden">
+            <label class="form-label">慣れてきてから設定した目標</label>
+            <textarea class="form-control auto-resize" id="q5" placeholder="客を笑顔にする、試験でAをとるなど"></textarea>
+            <label class="form-label">生じた問題（失敗・苦労・困難）</label>
+            <textarea class="form-control auto-resize" id="q6" placeholder="意見の衝突、試験不合格など"></textarea>
+            <label class="form-label">問題の原因</label>
+            <textarea class="form-control auto-resize" id="q7" placeholder="選考基準の曖昧さ、準備不足など"></textarea>
+            <label class="form-label">問題に対するあなたの行動</label>
+            <textarea class="form-control auto-resize" id="q8" placeholder="調停した、すぐに勉強を再開したなど"></textarea>
+            <label class="form-label">問題克服のため創意工夫</label>
+            <textarea class="form-control auto-resize" id="q9" placeholder="時間計測して解いた、選考基準を複数作ったなど"></textarea>
+            <div class="d-flex gap-2 mt-4">
+                <button onclick="showPage('pr-step1', 1)" class="btn btn-secondary w-50 btn-option">戻る</button>
+                <button onclick="showPage('pr-step3', 3)" class="btn btn-primary w-50 btn-option">次へ（3/3）</button>
+            </div>
+        </div>
+
+        <div id="pr-step3" class="hidden">
+            <label class="form-label">問題を振り返って得た学び</label>
+            <textarea class="form-control auto-resize" id="q10" placeholder="根回しの重要性、緊張感を持つ大切さなど"></textarea>
+            <label class="form-label">得た成長や自信</label>
+            <textarea class="form-control auto-resize" id="q11" placeholder="コミュニケーション力の向上など"></textarea>
+            <label class="form-label">具体的な成果</label>
+            <textarea class="form-control auto-resize" id="q12" placeholder="7割がA以上、ベスト8入りなど"></textarea>
+            <label class="form-label">一番嬉しかった褒め言葉</label>
+            <textarea class="form-control auto-resize" id="q13" placeholder="「いてくれて心強いよ」など"></textarea>
+            <hr>
+            <label class="form-label text-primary font-weight-bold">★課題のタイトル（必須）</label>
+            <textarea class="form-control border-primary auto-resize" id="q-title" rows="1" placeholder="例：大学生活でぶちあたった最大の壁をどう乗り越えたか？"></textarea>
+            <div class="d-flex gap-2 mt-4">
+                <button onclick="showPage('pr-step2', 2)" class="btn btn-secondary w-50 btn-option">戻る</button>
+                <button onclick="handleGenerate()" class="btn btn-success w-50 btn-option">✨ 生成する</button>
+            </div>
+        </div>
+
+        <div id="step-result" class="hidden">
+            <div class="result-box mb-3" id="result-text"></div>
+            <div class="d-grid gap-2">
+                <button onclick="showPage('pr-step3', 3)" class="btn btn-outline-primary btn-option">課題チェンジ（内容保持）</button>
+                <a href="index.html" class="btn btn-secondary btn-option">メニューに戻る</a>
+            </div>
         </div>
     </div>
+</div>
 
-    <form id="prForm">
-        <div class="form-group">
-            <label for="strength">あなたの強みは何ですか？</label>
-            <input type="text" id="strength" placeholder="例：粘り強さ、リーダーシップ">
-        </div>
-
-        <div class="form-group">
-            <label for="episode">その強みが発揮された具体的なエピソード</label>
-            <textarea id="episode" placeholder="いつ、どこで、何を、どのように取り組んだか記入してください"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="contribution">その強みを会社でどう活かしたいですか？</label>
-            <textarea id="contribution" placeholder="入社後の活躍イメージ"></textarea>
-        </div>
-
-        <div class="button-group">
-            <button type="button" class="btn-primary" onclick="generatePR()">自己PRを生成する</button>
-            <a href="index.html" class="btn-secondary">メニューに戻る</a>
-        </div>
-    </form>
-
-    <div id="resultArea">
-        <h3>AI生成結果</h3>
-        <p id="aiOutput">ここに生成された文章が表示されます...</p>
-    </div>
-
-    <script>
-        // 1. localStorageからニックネームを取得して表示
-        window.onload = () => {
-            const savedName = localStorage.getItem('user_nickname') || 'ゲスト';
-            document.getElementById('displayName').innerText = savedName;
+<script>
+    // 共通メッセージ取得関数
+    function getCharMsg(step) {
+        const name = localStorage.getItem('user_nickname') || "あなた";
+        const msgs = {
+            1: `「はい、${name}さんの自己PR生成をお手伝いしますね。まずは基本情報を教えてください」`,
+            2: `「次に、${name}さんがぶつかった壁や、それをどう乗り越えたかについて教えてください」`,
+            3: `「お疲れ様です、${name}さん。最後に、体験から得たことを教えて下さい」`,
+            result: `「${name}さん、お疲れ様でした。納得のいく文章になりましたか？」`
         };
+        return msgs[step] || `「${name}さん、お手伝いできることはありますか？」`;
+    }
 
-        // 2. 自己PR生成ロジック（骨組み）
-        function generatePR() {
-            const strength = document.getElementById('strength').value;
-            const episode = document.getElementById('episode').value;
-            const contribution = document.getElementById('contribution').value;
+    function showPage(id, step) {
+        document.querySelectorAll('.app-container > div:not(.character-bubble)').forEach(el => el.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        document.getElementById('main-msg').innerText = getCharMsg(step);
+    }
 
-            if (!strength || !episode) {
-                alert("項目を入力してください");
-                return;
-            }
-
-            // 結果エリアを表示
-            document.getElementById('resultArea').style.display = 'block';
-            document.getElementById('aiOutput').innerText = "現在、Gemini APIと連携して文章を生成する準備をしています...";
-
-            // TODO: ここに以前作成したGemini API呼び出しロジックを統合します
-            console.log("生成用データ:", { strength, episode, contribution });
+    // オートリサイズ
+    document.addEventListener('input', function (e) {
+        if (e.target.classList.contains('auto-resize')) {
+            e.target.style.height = 'auto';
+            e.target.style.height = e.target.scrollHeight + 'px';
         }
-    </script>
+    });
+
+    window.onload = () => {
+        showPage('pr-step1', 1);
+    };
+
+    async function handleGenerate() {
+        // ※ここにGemini APIの呼び出しロジックを統合します（次のステップ）
+        alert("API連携の準備中！設計書のルールに基づき生成します。");
+    }
+</script>
 </body>
 </html>
