@@ -118,9 +118,51 @@
         showPage('pr-step1', 1);
     };
 
-    async function handleGenerate() {
-        // ※ここにGemini APIの呼び出しロジックを統合します（次のステップ）
-        alert("API連携の準備中！設計書のルールに基づき生成します。");
+   async function handleGenerate() {
+        const title = document.getElementById('q-title').value.trim();
+        if (!title) {
+            alert("課題のタイトルを入力してください");
+            return;
+        }
+
+        // 13項目のデータを集約
+        const formData = {
+            title: title,
+            fields: {
+                q1: document.getElementById('q1').value,
+                q2: document.getElementById('q2').value,
+                q3: document.getElementById('q3').value,
+                q4: document.getElementById('q4').value,
+                q5: document.getElementById('q5').value,
+                q6: document.getElementById('q6').value,
+                q7: document.getElementById('q7').value,
+                q8: document.getElementById('q8').value,
+                q9: document.getElementById('q9').value,
+                q10: document.getElementById('q10').value,
+                q11: document.getElementById('q11').value,
+                q12: document.getElementById('q12').value,
+                q13: document.getElementById('q13').value
+            }
+        };
+
+        // UIを「生成中」の状態にする
+        document.getElementById('main-msg').innerText = "「AIが一生懸命考えています。少しだけ待ってくださいね…」";
+        
+        // 【重要】api-config.js の GeminiAPI を呼び出す
+        try {
+            const prompt = GeminiAPI.buildPRPrompt(formData);
+            const result = await GeminiAPI.generateContent(prompt);
+
+            if (result) {
+                document.getElementById('result-text').innerText = result;
+                showPage('step-result', 'result'); // 結果画面へ切り替え
+            } else {
+                throw new Error("生成に失敗しました");
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById('main-msg').innerText = "「エラーが発生しました。APIキーの設定を確認してください」";
+        }
     }
 </script>
 </body>
