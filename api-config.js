@@ -7,7 +7,7 @@ const GeminiAPI = {
     // ★重要: GitHubにキーを公開したくない場合は空欄にし、
     // 実行時にユーザーに prompt で入力させる運用も可能です。
     // もし書き込む場合は、必ず Google Cloud 側でドメイン制限をかけてください。
-    apiKey: "YOUR_API_KEY_HERE", 
+    apiKey: "AIzaSyAY5LAPzzZM542dnIYFVig6g-jA6tsXDAU", 
 
     async generateContent(promptText) {
         if (!this.apiKey || this.apiKey === "YOUR_API_KEY_HERE") {
