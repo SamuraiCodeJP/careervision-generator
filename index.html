@@ -1,1 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>キャリア支援ツール - メインメニュー</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; padding: 1rem; }
+        .menu-card { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; }
+        button { cursor: pointer; padding: 0.5rem 1rem; }
+    </style>
+</head>
+<body>
 
+    <h1>キャリア支援ツール</h1>
+
+    <div class="menu-card">
+        <h3>ユーザー情報</h3>
+        <input type="text" id="nicknameInput" placeholder="ニックネームを入力">
+        <button onclick="saveNickname()">保存</button>
+        <p id="welcomeMsg"></p>
+    </div>
+
+    <div class="menu-card">
+        <h3>作成メニュー</h3>
+        <ul>
+            <li><a href="z_pr.html">自己PR作成 (Z)</a></li>
+            <li><a href="v_shibo.html">志望動機作成 (V)</a></li>
+        </ul>
+    </div>
+
+    <script>
+        // ロード時に保存済みニックネームを表示
+        window.onload = () => {
+            const savedName = localStorage.getItem('user_nickname');
+            if (savedName) {
+                document.getElementById('nicknameInput').value = savedName;
+                updateWelcome(savedName);
+            }
+        };
+
+        function saveNickname() {
+            const name = document.getElementById('nicknameInput').value;
+            if (name) {
+                localStorage.setItem('user_nickname', name);
+                updateWelcome(name);
+                alert('ニックネームを保存しました');
+            }
+        }
+
+        function updateWelcome(name) {
+            document.getElementById('welcomeMsg').innerText = `こんにちは、${name}さん！`;
+        }
+    </script>
+</body>
+</html>
