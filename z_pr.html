@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自己PR作成 (Z) - キャリア支援ツール</title>
+    <style>
+        body { font-family: "Helvetica Neue", Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 2rem auto; padding: 0 1rem; color: #333; }
+        .header { border-bottom: 2px solid #007bff; margin-bottom: 2rem; padding-bottom: 1rem; }
+        .user-info { background: #f8f9fa; padding: 0.5rem 1rem; border-radius: 4px; margin-bottom: 1rem; font-weight: bold; }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        input[type="text"], textarea { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        textarea { height: 100px; }
+        .button-group { display: flex; gap: 10px; margin-top: 2rem; }
+        button { padding: 0.7rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-secondary { background: #6c757d; color: white; text-decoration: none; display: inline-block; text-align: center; }
+        #resultArea { margin-top: 2rem; padding: 1rem; border: 1px dashed #007bff; background: #ebf5ff; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>自己PR作成 (Z)</h1>
+        <div class="user-info">
+            ユーザー: <span id="displayName">読み込み中...</span> さん
+        </div>
+    </div>
+
+    <form id="prForm">
+        <div class="form-group">
+            <label for="strength">あなたの強みは何ですか？</label>
+            <input type="text" id="strength" placeholder="例：粘り強さ、リーダーシップ">
+        </div>
+
+        <div class="form-group">
+            <label for="episode">その強みが発揮された具体的なエピソード</label>
+            <textarea id="episode" placeholder="いつ、どこで、何を、どのように取り組んだか記入してください"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="contribution">その強みを会社でどう活かしたいですか？</label>
+            <textarea id="contribution" placeholder="入社後の活躍イメージ"></textarea>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn-primary" onclick="generatePR()">自己PRを生成する</button>
+            <a href="index.html" class="btn-secondary">メニューに戻る</a>
+        </div>
+    </form>
+
+    <div id="resultArea">
+        <h3>AI生成結果</h3>
+        <p id="aiOutput">ここに生成された文章が表示されます...</p>
+    </div>
+
+    <script>
+        // 1. localStorageからニックネームを取得して表示
+        window.onload = () => {
+            const savedName = localStorage.getItem('user_nickname') || 'ゲスト';
+            document.getElementById('displayName').innerText = savedName;
+        };
+
+        // 2. 自己PR生成ロジック（骨組み）
+        function generatePR() {
+            const strength = document.getElementById('strength').value;
+            const episode = document.getElementById('episode').value;
+            const contribution = document.getElementById('contribution').value;
+
+            if (!strength || !episode) {
+                alert("項目を入力してください");
+                return;
+            }
+
+            // 結果エリアを表示
+            document.getElementById('resultArea').style.display = 'block';
+            document.getElementById('aiOutput').innerText = "現在、Gemini APIと連携して文章を生成する準備をしています...";
+
+            // TODO: ここに以前作成したGemini API呼び出しロジックを統合します
+            console.log("生成用データ:", { strength, episode, contribution });
+        }
+    </script>
+</body>
+</html>
