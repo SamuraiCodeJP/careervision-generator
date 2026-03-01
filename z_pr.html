@@ -32,8 +32,11 @@
             <textarea class="form-control auto-resize" id="q3" placeholder="馴染めるか不安、接客できるか不安など"></textarea>
             <label class="form-label">不安に対して努力したこと</label>
             <textarea class="form-control auto-resize" id="q4" placeholder="自分から挨拶した、先輩を真似したなど"></textarea>
-            <button onclick="showPage('pr-step2', 2)" class="btn btn-primary w-100 btn-option mt-4">次へ（2/3）</button>
+            <div class="d-flex gap-2 mt-4">
+            <a href="index.html" class="btn btn-secondary w-50 btn-option text-decoration-none d-flex align-items-center justify-content-center">戻る</a>
+            <button onclick="showPage('pr-step2', 2)" class="btn btn-primary w-50 btn-option">次へ（2/3）</button>
         </div>
+            
 
         <div id="pr-step2" class="hidden">
             <label class="form-label">慣れてきてから設定した目標</label>
