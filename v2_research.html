@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>業界・企業研究編 (V2) - キャリア支援ツール</title>
+    <style>
+        body { font-family: "Helvetica Neue", Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 2rem auto; padding: 0 1rem; color: #333; }
+        .header { border-bottom: 2px solid #e67e22; margin-bottom: 2rem; padding-bottom: 1rem; }
+        .user-info { background: #f8f9fa; padding: 0.5rem 1rem; border-radius: 4px; margin-bottom: 1rem; font-weight: bold; }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        input[type="text"], textarea { width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        textarea { height: 100px; }
+        .button-group { display: flex; gap: 10px; margin-top: 2rem; }
+        button { padding: 0.7rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        .btn-primary { background: #e67e22; color: white; }
+        .btn-secondary { background: #6c757d; color: white; text-decoration: none; display: inline-block; text-align: center; }
+        .vision-preview { background: #fff3e0; border-left: 5px solid #e67e22; padding: 10px; margin-bottom: 20px; font-size: 0.9rem; }
+        #researchResult { margin-top: 2rem; padding: 1.5rem; border: 1px solid #e67e22; background: #fffcf9; display: none; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>業界・企業研究編 (V2)</h1>
+        <div class="user-info">
+            ユーザー: <span id="displayName">読み込み中...</span> さん
+        </div>
+    </div>
+
+    <div class="vision-preview">
+        <strong>前回のビジョン（メモ）:</strong><br>
+        <span id="visionMemo">（V1でビジョンを入力するとここに表示されます）</span>
+    </div>
+
+    <form id="researchForm">
+        <div class="form-group">
+            <label for="company_name">1. 志望する企業名・業界</label>
+            <input type="text" id="company_name" placeholder="例：〇〇株式会社（ITサービス業界）">
+        </div>
+
+        <div class="form-group">
+            <label for="attraction">2. その企業のどこに魅力を感じましたか？（事業内容や社風）</label>
+            <textarea id="attraction" placeholder="例：若手から挑戦できる環境、独自の技術力など"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="matching">3. あなたのビジョンと、その企業の共通点はどこですか？</label>
+            <textarea id="matching" placeholder="例：顧客第一の姿勢が、私の『誠実さ』という価値観と一致している"></textarea>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn-primary" onclick="generateResearch()">企業研究を整理する</button>
+            <a href="v_shibo.html" class="btn-secondary">戻る</a>
+        </div>
+    </form>
+
+    <div id="researchResult">
+        <h3>AIによる分析結果</h3>
+        <div id="aiResearchOutput" style="white-space: pre-wrap;"></div>
+    </div>
+
+    <script>
+        window.onload = () => {
+            // ニックネーム取得
+            const savedName = localStorage.getItem('user_nickname') || 'ゲスト';
+            document.getElementById('displayName').innerText = savedName;
+
+            // V1で保存したビジョンがあれば表示（localStorage活用）
+            const savedVision = localStorage.getItem('user_vision_goal');
+            if (savedVision) {
+                document.getElementById('visionMemo').innerText = savedVision;
+            }
+        };
+
+        function generateResearch() {
+            const company = document.getElementById('company_name').value;
+            const attraction = document.getElementById('attraction').value;
+
+            if (!company || !attraction) {
+                alert("企業名と魅力は必ず入力してください");
+                return;
+            }
+
+            document.getElementById('researchResult').style.display = 'block';
+            document.getElementById('aiResearchOutput').innerText = "Geminiが企業とのマッチングを分析しています...";
+            
+            // API連携用のログ
+            console.log("分析データ:", { company, attraction });
+        }
+    </script>
+</body>
+</html>
